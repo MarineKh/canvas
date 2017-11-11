@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+  		#canvas {
+  			border: 2px solid red;
+  		}
+    </style>
+  </head>
+  <body>
+      <canvas id="canvas" width="600" height="500"></canvas>
+      
+      <script type="text/javascript">
+
+      	const canvas = document.getElementById('canvas');
+      	const ctx = canvas.getContext('2d');
+
+        const drawCircle = function(x, y, r) {
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 2 * Math.PI, false);
+          ctx.fill();
+          ctx.stroke();
+        };
+
+        const data = {
+          points: [
+            {x: 1, y: 100, r: 4, xDelta: 1, yDelta: 1},
+            {x: 50, y: 50, r: 20, xDelta: 1, yDelta: 1}
+          ]
+        };
+
+        const draw = function() {
+          ctx.fillStyle = "rgba(100, 200, 200, .2)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          data.points.forEach(function(pt) {
+            ctx.fillStyle = "red";
+            ctx.strokeStyle = "red";
+            drawCircle(pt.x, pt.y, pt.r)
+          });
+        };
+
+        const update = function() {
+           data.points.forEach(function(pt) {
+            pt.x = pt.x + pt.xDelta;
+
+            if(pt.x >= canvas.width - pt.r) {
+              pt.xDelta = -pt.xDelta;
+            } else if(pt.x <= 0) {
+                pt.xDelta = -pt.xDelta;
+            }
+          });
+        };
+        
+        const loop = function() {
+          draw();
+          update();
+          requestAnimationFrame(loop)
+       };
+
+        loop();
+      </script>
+  </body>
+</html>

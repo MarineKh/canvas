@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+  		#canvas {
+  			border: 2px solid red;
+  		}
+    </style>
+  </head>
+  <body>
+      <canvas id="canvas" width="600" height="500"></canvas>
+      
+      <script type="text/javascript">
+
+    
+        const abs = function(num) {
+            if(num < 0) {
+              return -num;
+            }
+            return num;
+        };
+
+        const collision = function(circle1, circle2) {
+            const run = abs(circle1.x - circle2.x);
+            const rise = abs(circle1.y - circle2.y);
+            const distance = Math.sqrt(run * run + rise * rise);
+
+            return distance <= circle1.r + circle2.r;
+        };
+
+        collision({x: 100, y: 100, r: 30},
+                  {x: 120, y: 120, r:50});
+
+      
+      </script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+  		#canvas {
+  			border: 2px solid red;
+  		}
+    </style>
+  </head>
+  <body>
+      <canvas id="canvas" width="600" height="500"></canvas>
+      
+      <script type="text/javascript">
+
+      	const canvas = document.getElementById('canvas');
+      	const ctx = canvas.getContext('2d');
+
+        const drawCircle = function(x, y, r) {
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 2 * Math.PI, false);
+          ctx.fill();
+          ctx.stroke();
+        };
+
+        const pt = {
+          x: 100, 
+          y: canvas.height - 20, 
+          r: 20, 
+          xDelta: 1, 
+          yDelta: -1          
+        };
+
+        const draw = function() {
+          ctx.fillStyle = "rgba(100, 200, 200, .2)";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "red";
+          ctx.strokeStyle = "red";
+          drawCircle(pt.x, pt.y, pt.r)
+        };
+
+        const update = function() {
+          pt.y = pt.y + pt.yDelta;
+          pt.x = pt.x + pt.xDelta;
+
+          pt.yDelta = pt.yDelta + .01
+        };
+        
+        const loop = function() {
+          draw();
+          update();
+          requestAnimationFrame(loop)
+       };
+
+        loop();
+      </script>
+  </body>
+</html>

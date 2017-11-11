@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+  		#canvas {
+  			border: 2px solid red;
+  		}
+    </style>
+  </head>
+  <body>
+      <canvas id="canvas" width="400" height="300"></canvas>
+      
+      <script type="text/javascript">
+
+      	const canvas = document.getElementById('canvas');
+      	const ctx = canvas.getContext('2d');
+
+        const gameData = {
+          isPaused: false,
+          ball: { 
+            x: 100, 
+            y: 100, 
+            r: 20, 
+            xDelta: 1, 
+            yDelta: 1
+          },
+          bars: [
+            {
+              x: canvas.width/2 - 50,
+              y: 60,
+              w: 100,
+              h: 20
+            }
+          ]
+        };
+
+        const forEach = function(arr, func) {
+            arr.forEach(func);
+        };
+
+        const drawCircle = function(x, y, r) {
+          ctx.beginPath();
+          ctx.arc(x, y, r, 0, 2 * Math.PI, false);
+          ctx.fill();
+          ctx.stroke();
+        };
+
+        const draw = function() {
+          const ball = gameData.ball;
+          ctx.fillStyle = 'lightblue';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          ctx.fillStyle = 'green';
+          drawCircle(ball.x, ball.y, ball.r)
+
+          forEach(gameData.bars, function(bar) {
+              ctx.fillStyle = 'blue';
+              ctx.fillRect(bar.x, bar.y, bar.w, bar.h)
+          });
+
+        };
+
+        const update = function() {
+            const ball = gameData.ball;
+            ball.x += ball.xDelta;
+            ball.y += ball.yDelta;
+
+            // check wall
+            if(ball.x >= canvas.width - ball.r || ball.x <= ball.r) {
+              ball.xDelta = -ball.xDelta;
+            } 
+            if(ball.y >= canvas.height - ball.r || ball.y <= ball.r) {
+              ball.yDelta = -ball.yDelta;
+            } 
+
+            const ballRectX = ball.x - ball.r;
+            const ballRectY = ball.y - ball.r;
+            const ballRectW = ball.r * 2;
+            const ballRectH = ball.r * 2;
+
+            forEach(gameData.bars, function(bar) {
+                if(ball.yDelta > 0) {
+                  // ball going down
+                   if(ball.y + ball.r === bar.y && ball.x > bar.x && ball.x < bar.x + bar.w) {
+                        ball.yDelta = -ball.yDelta
+                    } 
+                } else {
+                  // ball going up
+                    if(ball.y - ball.r === bar.y + bar.h && ball.x > bar.x && ball.x < bar.x + bar.w) {
+                        ball.yDelta = -ball.yDelta
+                    } 
+                }
+            });
+
+        };
+
+        const loop = function() {
+          if(!gameData.isPaused) {
+            draw();
+            update();
+          }
+
+          requestAnimationFrame(loop)
+       };
+
+        loop();
+
+        addEventListener('keypress', function(e) {
+          gameData.isPaused = !gameData.isPaused;
+        })
+      </script>
+  </body>
+</html>

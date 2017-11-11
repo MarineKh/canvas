@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style type="text/css">
+  		#canvas {
+  			
+  		}
+    </style>
+  </head>
+  <body>
+      <canvas id="canvas" width="600" height="500"></canvas>
+      
+      <script type="text/javascript">
+
+      	const canvas = document.getElementById('canvas');
+      	const ctx = canvas.getContext('2d');
+
+      	const bgImage = new Image();
+      	bgImage.src = 'https://cdn.dribbble.com/users/375867/screenshots/1614211/apple-farm-village-garden-forest-game-background-game-assets-gui-sidescroller-horizontal-wallpaper-dribbble.png';
+
+      	const marioImg = new Image();
+      	marioImg.src = 'http://petslady.com/sites/default/files/inline-images/penguin_mario.png';
+
+      	const floorY = canvas.height - 75;
+
+		const gameData = {
+      		mario: {
+      			x: 100,
+      			y: floorY,
+      			img: marioImg,
+      			width: 40,
+      			height: 60,
+      			xDelta: 0,
+      			yDelta: 0
+      		}
+      	}
+     
+      	const maxJumpHeight = floorY - (gameData.mario.height);
+
+      
+      	const draw = function() {
+      		ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+      		const mario = gameData.mario;
+      		ctx.drawImage(mario.img, mario.x, mario.y, mario.width, mario.height);
+      	
+      	};
+
+      	const updateData = function() {
+      		const mario = gameData.mario;
+      		if(mario.yDelta !== 0) {
+      			mario.y = mario.y - mario.yDelta; //mario go up
+      			if(mario.y <= maxJumpHeight) {
+      				mario.yDelta = -mario.yDelta;
+      			} else if(mario.y > floorY) {
+      				mario.y = floorY;
+      				mario.yDelta = 0;
+      			}
+      		}
+      	};
+
+      	const loop = function() {
+      		draw();
+      		updateData();
+      		requestAnimationFrame(loop);
+      	};
+
+      	loop();
+      	
+      	const leftKey = 37;
+      	const upKey = 38;
+      	const rightKey = 39;
+      	const downKey = 40;
+
+      	document.addEventListener('keydown', function() {
+
+      		const mario = gameData.mario;
+      		if(event.keyCode === rightKey) {
+      			mario.x = mario.x + 5;
+      			if(mario.x >= canvas.width - mario.width) {
+      				mario.x = 1;
+      			}
+      		} else if(event.keyCode === leftKey) {
+      			mario.x = mario.x - 5;
+      			if(mario.x <= 0) {
+      				mario.x = canvas.width - mario.width;
+      			}
+      		} else if(event.keyCode === upKey) {
+      			if(mario.yDelta === 0) {
+      				mario.yDelta = 3;
+      			}
+      		}
+
+      	}, false);
+
+      </script>
+  </body>
+</html>
